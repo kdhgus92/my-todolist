@@ -70,9 +70,9 @@ PRD 8절에 이미 Day1(백엔드+DB)/Day2(프론트+통합)의 개략적 일정
   - `docs/schema.sql`의 DDL을 `backend/migrations/001_init.sql`로 이관하고, 해당 파일을 대상 데이터베이스에 실행해 `users`, `categories`, `todos` 테이블과 인덱스를 생성한다.
   - `.env.example`에 DB 접속 정보(host/port/user/password/database) 항목을 정의한다(5-project-principle.md 6절).
 - 완료 조건:
-  - [ ] `users`, `categories`, `todos` 3개 테이블이 정상 생성되었다.
-  - [ ] `backend/migrations/001_init.sql` 파일이 `docs/schema.sql`과 동일한 DDL을 포함하여 저장소에 존재한다.
-  - [ ] `.env.example`에 DB 접속 관련 환경변수 항목이 정의되어 있다.
+  - [x] `users`, `categories`, `todos` 3개 테이블이 정상 생성되었다.
+  - [x] `backend/migrations/001_init.sql` 파일이 `docs/schema.sql`과 동일한 DDL을 포함하여 저장소에 존재한다.
+  - [x] `.env.example`에 DB 접속 관련 환경변수 항목이 정의되어 있다.
 
 #### DB-02. 제약조건·인덱스 수동 검증
 
@@ -84,10 +84,10 @@ PRD 8절에 이미 Day1(백엔드+DB)/Day2(프론트+통합)의 개략적 일정
   - `chk_todos_date_range`(`end_date >= start_date`)가 위반 데이터 삽입을 거부하는지 확인한다(BR-05).
   - `idx_todos_user_id`, `idx_todos_category_id`, `users.email` UNIQUE 인덱스가 존재하는지 `\d` 또는 `pg_indexes` 조회로 확인한다.
 - 완료 조건:
-  - [ ] 카테고리명 중복(대소문자/공백 무시) 삽입 시 제약 위반 에러가 발생함을 확인했다.
-  - [ ] 사용자당 기본 카테고리 2개 삽입 시도가 거부됨을 확인했다.
-  - [ ] `end_date < start_date` 데이터 삽입이 CHECK 제약으로 거부됨을 확인했다.
-  - [ ] 4개 인덱스(users.email UNIQUE, todos.user_id, todos.category_id, categories 유니크 인덱스 2종)가 모두 존재함을 확인했다.
+  - [x] 카테고리명 중복(대소문자/공백 무시) 삽입 시 제약 위반 에러가 발생함을 확인했다.
+  - [x] 사용자당 기본 카테고리 2개 삽입 시도가 거부됨을 확인했다.
+  - [x] `end_date < start_date` 데이터 삽입이 CHECK 제약으로 거부됨을 확인했다.
+  - [x] 4개 인덱스(users.email UNIQUE, todos.user_id, todos.category_id, categories 유니크 인덱스 2종)가 모두 존재함을 확인했다.
 
 ### 3.2 백엔드(BE) 트랙
 
