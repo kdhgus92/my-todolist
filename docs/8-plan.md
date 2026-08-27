@@ -100,9 +100,9 @@ PRD 8절에 이미 Day1(백엔드+DB)/Day2(프론트+통합)의 개략적 일정
   - `src/config/db.js`에서 pg `Pool`(크기 10~20)을 생성하고, `src/config/env.js`에서 환경변수를 로드/검증한다.
   - `src/app.js`(Express 앱 조립)와 `server.js`(진입점)를 작성하고, `GET /health`에서 서버 및 DB 연결 상태를 확인하는 엔드포인트를 둔다(5-project-principle.md 6절).
 - 완료 조건:
-  - [ ] `backend/src` 하위에 config/middlewares/routes/controllers/services/repositories/utils 디렉토리가 생성되어 있다.
-  - [ ] `Pool` 기반 DB 연결이 정상 동작하며 `GET /health` 호출 시 200 응답과 함께 DB 연결 상태가 반환된다.
-  - [ ] `.env.example`에 포트, DB 접속 정보, JWT 시크릿, 토큰 만료 시간 항목이 모두 정의되어 있다.
+  - [x] `backend/src` 하위에 config/middlewares/routes/controllers/services/repositories/utils 디렉토리가 생성되어 있다.
+  - [x] `Pool` 기반 DB 연결이 정상 동작하며 `GET /health` 호출 시 200 응답과 함께 DB 연결 상태가 반환된다.
+  - [x] `.env.example`에 포트, DB 접속 정보, JWT 시크릿, 토큰 만료 시간 항목이 모두 정의되어 있다.
 
 #### BE-02. 공통 미들웨어 및 공용 유틸 구현
 
@@ -117,10 +117,10 @@ PRD 8절에 이미 Day1(백엔드+DB)/Day2(프론트+통합)의 개략적 일정
   - `utils/jwt.js`: access_token/refresh_token 발급·검증 함수를 구현한다(PRD 6.3절: access 15분~1시간, refresh 7일~14일).
   - BR-02(소유권 검증) 처리를 위한 공통 서비스 함수 또는 미들웨어 훅 지점을 마련한다(5-project-principle.md 2절 6항).
 - 완료 조건:
-  - [ ] 유효하지 않거나 만료된 access_token으로 보호 라우트 호출 시 auth 미들웨어가 401을 반환한다.
-  - [ ] 임의 라우트에서 강제로 예외를 던졌을 때 errorHandler가 `{ error: { code, message } }` 형식으로 응답한다.
-  - [ ] `toCamelCase(row)` 헬퍼가 snake_case 컬럼(예: `user_id`, `is_done`)을 camelCase로 정확히 변환한다.
-  - [ ] password 해시/검증 함수와 jwt 발급/검증 함수가 각각 정상 동작함을 임시 스크립트로 확인했다.
+  - [x] 유효하지 않거나 만료된 access_token으로 보호 라우트 호출 시 auth 미들웨어가 401을 반환한다.
+  - [x] 임의 라우트에서 강제로 예외를 던졌을 때 errorHandler가 `{ error: { code, message } }` 형식으로 응답한다.
+  - [x] `toCamelCase(row)` 헬퍼가 snake_case 컬럼(예: `user_id`, `is_done`)을 camelCase로 정확히 변환한다.
+  - [x] password 해시/검증 함수와 jwt 발급/검증 함수가 각각 정상 동작함을 임시 스크립트로 확인했다.
 
 #### BE-03. 인증 API 구현 (UC-01)
 
