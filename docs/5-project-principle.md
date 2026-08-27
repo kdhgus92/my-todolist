@@ -8,6 +8,7 @@
 | 0.2 | 2026-08-26 | 최상위 원칙에 단일 책임 원칙(SRP) 항목 추가 | ohhyeun |
 | 0.3 | 2026-08-26 | 프론트엔드 디렉토리 구조를 Feature-Sliced Design(FSD)으로 변경 (3.2, 7.2절) | ohhyeun |
 | 0.4 | 2026-08-27 | DB-01/02·BE-01~07 실제 구현과의 정합성 점검 결과 반영: 백엔드 디렉토리 구조(7.1절) 보완, BR-08 카테고리명 중복 검증 방식 정정(5절), 테스트 범위 확대 반영(5절), CORS·Swagger UI·로그인 실패 응답·소유권 검증 예외 명시(2절 6항, 6절) | ohhyeun |
+| 0.5 | 2026-08-27 | FE-01~09 및 세션 영속화(부팅 시 자동 로그인) 실제 구현과의 정합성 점검 결과 반영: 프론트엔드 디렉토리 구조(7.2절)의 `ProtectedRoute.tsx` 역할·`entities/user`·`shared/api/client.ts`·`features/manage-category` 서술을 실제 구현에 맞게 정정 | ohhyeun |
 
 ## 1. 문서 개요
 
@@ -163,7 +164,7 @@ frontend/
 │   │   │   └── QueryProvider.tsx   # TanStack Query의 QueryClientProvider
 │   │   ├── routes/
 │   │   │   ├── router.tsx          # 화면 라우팅, 6절 화면 흐름 매핑
-│   │   │   └── ProtectedRoute.tsx  # 비인증 접근 시 SC-02로 리다이렉트 (BR-01)
+│   │   │   └── ProtectedRoute.tsx  # 비인증 접근 시 SC-02로 리다이렉트 + 인증된 화면 공통 헤더(Header) 렌더링 (BR-01)
 │   │   └── App.tsx
 │   ├── pages/
 │   │   ├── signup/index.tsx        # SC-01
@@ -186,12 +187,12 @@ frontend/
 │   │   ├── filter-todos/   # UC-04: 카테고리·상태 필터 바
 │   │   └── manage-category/  # 카테고리 생성/삭제 모달 (SC-06, BR-04/BR-09)
 │   │       ├── ui/CategoryManageModal.tsx
-│   │       ├── model/useManageCategory.ts
 │   │       └── index.ts
 │   ├── entities/
 │   │   ├── user/
 │   │   │   ├── model/authStore.ts      # Zustand: access_token, 로그인 사용자 정보
-│   │   │   ├── api/users.api.ts        # UC-02 조회/수정 API 호출
+│   │   │   ├── model/bootstrapAuth.ts  # 앱 부팅 시 refresh+/users/me로 세션 복구 (6-arch.md 4.1절)
+│   │   │   ├── api/users.api.ts        # UC-02 조회/수정 API 호출, /users/me 조회
 │   │   │   └── index.ts
 │   │   ├── category/
 │   │   │   ├── model/useCategoryList.ts  # TanStack Query 조회 훅
@@ -205,7 +206,7 @@ frontend/
 │   │       ├── ui/TodoCard.tsx
 │   │       └── index.ts
 │   └── shared/
-│       ├── api/client.ts       # fetch 래퍼, 토큰 첨부, 401 시 refresh 처리 (PRD 6.3절)
+│       ├── api/client.ts       # fetch 래퍼, 토큰 첨부, 401 시 refresh 처리, 부팅 시 세션 복구·로그아웃용 refreshAccessToken/logoutRequest 노출 (PRD 6.3절, 6-arch.md 4.1절)
 │       ├── ui/
 │       │   ├── Button.tsx
 │       │   ├── Input.tsx
