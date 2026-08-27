@@ -33,7 +33,7 @@ export function TodoBoard() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
       {todos.map((todo) => (
         <div key={todo.id} onClick={() => navigate(`/todos/${todo.id}/edit`)} style={{ cursor: 'pointer' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+          <div className="todo-row" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
             <div style={{ flex: 1 }} onClick={(e) => e.stopPropagation()}>
               <TodoCard
                 todo={todo}

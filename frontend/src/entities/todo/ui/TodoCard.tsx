@@ -16,7 +16,7 @@ export interface TodoCardProps {
 export function TodoCard({ todo, category, onToggleDone }: TodoCardProps) {
   const statusStyle = STATUS_COLOR[todo.status];
   return (
-    <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+    <div className="todo-card" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
       <input type="checkbox" checked={todo.isDone} onChange={onToggleDone} readOnly={!onToggleDone} />
       <div style={{ flex: 1 }}>
         <div style={{ textDecoration: todo.isDone ? 'line-through' : 'none', color: todo.isDone ? 'var(--color-text-muted)' : 'var(--color-text)' }}>

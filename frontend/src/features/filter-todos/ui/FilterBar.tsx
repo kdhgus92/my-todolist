@@ -19,7 +19,7 @@ export function FilterBar() {
   }
 
   return (
-    <div style={{ display: 'flex', gap: 'var(--space-4)', alignItems: 'center' }}>
+    <div className="filter-bar">
       <select
         value={categoryId}
         onChange={(e) => updateParam('categoryId', e.target.value)}
