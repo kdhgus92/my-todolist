@@ -14,4 +14,12 @@ async function create({ email, password, name }, client = pool) {
   return toCamelCase(result.rows[0]);
 }
 
-module.exports = { findByEmail, create };
+async function updateName(id, name, client = pool) {
+  const result = await client.query(
+    'UPDATE users SET name = COALESCE($1, name) WHERE id = $2 RETURNING *',
+    [name, id]
+  );
+  return toCamelCase(result.rows[0]);
+}
+
+module.exports = { findByEmail, create, updateName };

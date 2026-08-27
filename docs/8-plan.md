@@ -147,9 +147,9 @@ PRD 8절에 이미 Day1(백엔드+DB)/Day2(프론트+통합)의 개략적 일정
   - `services/users.service.js`에 name 수정 로직을 구현한다(email은 수정 대상에서 제외 — BR-07).
   - `controllers/users.controller.js`, `routes/users.routes.js`: `PATCH /users/me` 엔드포인트를 구현하고 auth 미들웨어를 적용한다.
 - 완료 조건:
-  - [ ] 로그인 상태에서 name을 변경하면 변경된 name이 저장되고 응답에 반영된다.
-  - [ ] 요청 바디에 email 변경 값을 포함해도 email은 변경되지 않는다(BR-07).
-  - [ ] access_token 없이 `PATCH /users/me` 호출 시 401로 거부된다(BR-01).
+  - [x] 로그인 상태에서 name을 변경하면 변경된 name이 저장되고 응답에 반영된다.
+  - [x] 요청 바디에 email 변경 값을 포함해도 email은 변경되지 않는다(BR-07).
+  - [x] access_token 없이 `PATCH /users/me` 호출 시 401로 거부된다(BR-01).
 
 #### BE-05. 카테고리 API 구현
 
