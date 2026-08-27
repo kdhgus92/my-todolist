@@ -18,6 +18,7 @@ function validateEnv(envSource) {
   return {
     port: Number(envSource.PORT),
     dbConnectionString: envSource.POSTGRES_CONNECTION_STRING,
+    nodeEnv: envSource.NODE_ENV || "development",
     corsOrigin: envSource.FRONTEND_ORIGIN || "http://localhost:5173",
     jwt: {
       accessSecret: envSource.JWT_ACCESS_SECRET,
