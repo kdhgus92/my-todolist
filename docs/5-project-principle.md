@@ -9,6 +9,7 @@
 | 0.3 | 2026-08-26 | 프론트엔드 디렉토리 구조를 Feature-Sliced Design(FSD)으로 변경 (3.2, 7.2절) | ohhyeun |
 | 0.4 | 2026-08-27 | DB-01/02·BE-01~07 실제 구현과의 정합성 점검 결과 반영: 백엔드 디렉토리 구조(7.1절) 보완, BR-08 카테고리명 중복 검증 방식 정정(5절), 테스트 범위 확대 반영(5절), CORS·Swagger UI·로그인 실패 응답·소유권 검증 예외 명시(2절 6항, 6절) | ohhyeun |
 | 0.5 | 2026-08-27 | FE-01~09 및 세션 영속화(부팅 시 자동 로그인) 실제 구현과의 정합성 점검 결과 반영: 프론트엔드 디렉토리 구조(7.2절)의 `ProtectedRoute.tsx` 역할·`entities/user`·`shared/api/client.ts`·`features/manage-category` 서술을 실제 구현에 맞게 정정 | ohhyeun |
+| 0.6 | 2026-08-27 | FE-09 이후 범위外 추가 작업(다크/라이트 모드, 다국어)의 실제 구현 반영: 프론트엔드 디렉토리 구조(7.2절) `shared/lib`에 `theme.ts`, `i18n.ts` 추가 | ohhyeun |
 
 ## 1. 문서 개요
 
@@ -213,7 +214,9 @@ frontend/
 │       │   ├── ConfirmDialog.tsx   # 3.2절 확인 다이얼로그
 │       │   └── FormFieldError.tsx  # 3.3절 인라인 오류 메시지
 │       ├── lib/
-│       │   └── validators.ts   # 클라이언트 측 보조 검증(이메일 형식 등)
+│       │   ├── validators.ts   # 클라이언트 측 보조 검증(이메일 형식 등)
+│       │   ├── theme.ts        # 다크/라이트 모드 Zustand 스토어, localStorage 영속화, 시스템 선호도 감지 (FE-09 이후 범위外 추가 작업)
+│       │   └── i18n.ts         # 한/영/일 다국어 딕셔너리+Zustand 스토어, localStorage 영속화, 브라우저 언어 감지 (FE-09 이후 범위外 추가 작업)
 │       └── types/
 │           └── domain.ts       # EN-01~03 공용 타입, Status 유니온 타입
 │   └── main.tsx

@@ -5,6 +5,7 @@
 | 버전 | 날짜 | 변경 내용 | 작성자 |
 |---|---|---|---|
 | 0.1 | 2026-08-27 | 최초 작성 | ohhyeun |
+| 0.2 | 2026-08-27 | FE-09 이후 범위外 추가 작업(다크 모드)의 실제 구현 팔레트 반영: 3.8절 다크 모드 팔레트 신설 | ohhyeun |
 
 ## 1. 문서 개요
 
@@ -88,6 +89,35 @@
 | 진행중 | `#B45309` (`--color-accent-hover`) | `#FDECD1` (`--color-accent-subtle`) |
 | 완료 | `#2F7D4F` (`--color-success`) | `#E4F1E8` |
 | 기한초과 | `#C0392B` (`--color-danger`) | `#FBE9E7` (`--color-danger-subtle`) |
+
+### 3.8 다크 모드 팔레트 (FE-09 이후 범위外 추가 작업)
+
+본 문서 1.3절의 레퍼런스 무드는 라이트 모드를 기준으로 정의되었으며, 다크 모드는 애초 스코프에 없었다. FE-09 완료 후 사용자 요청으로 다크/라이트 토글이 추가 구현되면서 `frontend/src/index.css`의 `:root[data-theme="dark"]`에 아래 다크 팔레트가 정의되었다. 각 토큰의 용도는 3.1~3.6절과 동일하며, 값만 다크 모드 전용으로 재정의된다.
+
+| 토큰 | 값 |
+|---|---|
+| `--color-bg` | `#1C1B19` |
+| `--color-surface` | `#262421` |
+| `--color-surface-hover` | `#2E2B27` |
+| `--color-text` | `#EDEAE4` |
+| `--color-text-muted` | `#A8A39A` |
+| `--color-text-inverse` | `#1C1B19` |
+| `--color-accent` | `#E2984B` |
+| `--color-accent-hover` | `#F0A868` |
+| `--color-accent-subtle` | `#3A2C18` |
+| `--color-border` | `#3A3733` |
+| `--color-border-strong` | `#4A4640` |
+| `--color-ink` | `#EDEAE4` |
+| `--color-ink-hover` | `#FFFFFF` |
+| `--color-danger` | `#E0574A` |
+| `--color-danger-subtle` | `#3D211D` |
+| `--color-success` | `#4CAF7D` |
+| `--color-success-subtle` | `#1F3327` |
+| `--color-neutral-subtle` | `#33302B` |
+| `--shadow-sm` | `0 1px 2px rgba(0, 0, 0, 0.3)` |
+| `--shadow-md` | `0 4px 16px rgba(0, 0, 0, 0.4)` |
+
+타이포그래피/spacing/radius 토큰(4~5절)은 다크 모드에서도 동일하게 유지되며 재정의되지 않는다.
 
 ## 4. 타이포그래피
 

@@ -5,6 +5,7 @@
 | 버전 | 날짜 | 변경 내용 | 작성자 |
 |---|---|---|---|
 | 0.1 | 2026-08-26 | 최초 작성 | ohhyeun |
+| 0.2 | 2026-08-27 | FE-09 이후 범위外 추가 작업에 다크/라이트 모드, 다국어(한/영/일) 항목 추가 | ohhyeun |
 
 ## 1. 문서 개요
 
@@ -335,3 +336,5 @@ PRD 8절에 이미 Day1(백엔드+DB)/Day2(프론트+통합)의 개략적 일정
 
 **FE-09 이후 범위外 추가 작업** (WBS Task ID 없음, 사용자 요청으로 수행 — 새 Task 항목은 만들지 않음, YAGNI):
 - 새로고침 시 로그인 세션이 매번 풀리는 문제를 사용자가 지적해 부팅 시 `POST /auth/refresh`로 세션을 복구하도록 프론트에 추가(`entities/user/model/bootstrapAuth.ts`). 이 과정에서 "로그아웃해도 refresh_token 쿠키가 남아 자동 재로그인되는" 회귀 버그가 드러나 백엔드에 `POST /auth/logout`(refresh_token 쿠키 clearCookie)을 신규 추가했다(커밋 `09cb4a5`). backend test 169/169 통과, swagger.json 갱신, 실브라우저로 재검증 완료.
+- 사용자 요청으로 다크/라이트 모드를 추가(`shared/lib/theme.ts` Zustand 스토어 + localStorage 영속화 + 시스템 선호도 감지, `index.css`의 `:root[data-theme="dark"]` 팔레트, Header 토글 버튼).
+- 사용자 요청으로 한/영/일 다국어를 추가(`shared/lib/i18n.ts` 직접 만든 딕셔너리+Zustand 스토어 + localStorage 영속화 + 브라우저 언어 감지, Header 언어 선택 드롭다운, 전 화면/컴포넌트에 `t()`/`tError()` 적용). 할일 상태값(시작전/진행중/완료/기한초과)은 API 계약값을 그대로 유지하고 표시 라벨만 번역한다.
