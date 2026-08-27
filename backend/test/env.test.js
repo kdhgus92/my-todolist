@@ -17,6 +17,7 @@ test('returns expected shape when all required keys are present', () => {
   assert.deepStrictEqual(result, {
     port: 3000,
     dbConnectionString: 'postgres://user:pass@localhost:5432/db',
+    corsOrigin: 'http://localhost:5173',
     jwt: {
       accessSecret: 'access-secret',
       refreshSecret: 'refresh-secret',
@@ -50,4 +51,9 @@ test('coerces PORT string to a number', () => {
   const result = validateEnv({ ...baseEnv, PORT: '3000' });
   assert.strictEqual(result.port, 3000);
   assert.strictEqual(typeof result.port, 'number');
+});
+
+test('uses the given FRONTEND_ORIGIN when provided', () => {
+  const result = validateEnv({ ...baseEnv, FRONTEND_ORIGIN: 'https://my-todolist.example.com' });
+  assert.strictEqual(result.corsOrigin, 'https://my-todolist.example.com');
 });
