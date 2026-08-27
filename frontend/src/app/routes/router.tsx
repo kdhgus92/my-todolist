@@ -4,6 +4,7 @@ import SignupPage from '../../pages/signup';
 import LoginPage from '../../pages/login';
 import MyPagePage from '../../pages/my-page';
 import TodoFormPage from '../../pages/todo-form';
+import TodoListPage from '../../pages/todo-list';
 
 export const router = createBrowserRouter([
   { path: '/', element: <Navigate to="/login" replace /> },
@@ -12,7 +13,7 @@ export const router = createBrowserRouter([
   {
     element: <ProtectedRoute />,
     children: [
-      { path: '/todos', element: <div>할일 목록 (준비 중)</div> },
+      { path: '/todos', element: <TodoListPage /> },
       { path: '/todos/new', element: <TodoFormPage /> },
       { path: '/todos/:id/edit', element: <TodoFormPage /> },
       { path: '/my-page', element: <MyPagePage /> },
