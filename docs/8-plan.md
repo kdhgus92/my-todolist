@@ -132,12 +132,12 @@ PRD 8절에 이미 Day1(백엔드+DB)/Day2(프론트+통합)의 개략적 일정
   - `services/auth.service.js`: 회원가입(이메일 중복 검증, 비밀번호 해시, 사용자 생성 + 기본 카테고리 동시 생성 — 단일 트랜잭션), 로그인(email/password 검증, access/refresh 토큰 발급), 토큰 재발급 로직을 구현한다(BR-01, BR-08).
   - `controllers/auth.controller.js`, `routes/auth.routes.js`: `POST /auth/signup`, `POST /auth/login`, `POST /auth/refresh` 엔드포인트를 구현한다. refresh_token은 HttpOnly 쿠키로 설정한다(PRD 6.3절).
 - 완료 조건:
-  - [ ] 유효한 email/password로 회원가입 시 사용자 계정과 `isDefault=true` 카테고리가 함께 생성된다(UC-01 수용 기준).
-  - [ ] 이미 등록된 email로 회원가입 시 요청이 거부되고 사유가 반환된다(BR-08).
-  - [ ] 비밀번호가 최소 8자 미만이면 회원가입이 거부된다.
-  - [ ] 올바른 email/password로 로그인 시 access_token(응답 바디)과 refresh_token(HttpOnly 쿠키)이 발급된다.
-  - [ ] 잘못된 email/password로 로그인 시 인증 실패 사유가 반환된다.
-  - [ ] `POST /auth/refresh` 호출 시 유효한 refresh_token으로 새 access_token이 발급된다.
+  - [x] 유효한 email/password로 회원가입 시 사용자 계정과 `isDefault=true` 카테고리가 함께 생성된다(UC-01 수용 기준).
+  - [x] 이미 등록된 email로 회원가입 시 요청이 거부되고 사유가 반환된다(BR-08).
+  - [x] 비밀번호가 최소 8자 미만이면 회원가입이 거부된다.
+  - [x] 올바른 email/password로 로그인 시 access_token(응답 바디)과 refresh_token(HttpOnly 쿠키)이 발급된다.
+  - [x] 잘못된 email/password로 로그인 시 인증 실패 사유가 반환된다.
+  - [x] `POST /auth/refresh` 호출 시 유효한 refresh_token으로 새 access_token이 발급된다.
 
 #### BE-04. 사용자 정보 수정 API 구현 (UC-02)
 
