@@ -208,9 +208,9 @@ PRD 8절에 이미 Day1(백엔드+DB)/Day2(프론트+통합)의 개략적 일정
   - `app/providers/QueryProvider.tsx`(TanStack Query `QueryClientProvider`), `app/routes/router.tsx`, `app/App.tsx`를 작성해 앱 골격을 구성한다(비즈니스 로직 없음, 3.2절).
   - Zustand, TanStack Query, 라우터 등 최소 의존성만 설치한다.
 - 완료 조건:
-  - [ ] `frontend/src` 하위에 app/pages/widgets/features/entities/shared 6개 디렉토리가 생성되어 있다.
-  - [ ] `npm run dev`로 개발 서버 실행 시 빈 화면이라도 정상 기동되고(브라우저 접속으로 확인) `QueryClientProvider`가 앱 전체를 감싸고 있다.
-  - [ ] FSD 계층 규칙(상위→하위 단방향 import)을 ESLint 등으로 강제하지 않더라도, 최소한 문서화된 규칙을 팀(1인) 내 인지 상태로 남긴다(주석 또는 README 1줄).
+  - [x] `frontend/src` 하위에 app/pages/widgets/features/entities/shared 6개 디렉토리가 생성되어 있다.
+  - [x] `npm run dev`로 개발 서버 실행 시 빈 화면이라도 정상 기동되고(브라우저 접속으로 확인) `QueryClientProvider`가 앱 전체를 감싸고 있다.
+  - [x] FSD 계층 규칙(상위→하위 단방향 import)을 ESLint 등으로 강제하지 않더라도, 최소한 문서화된 규칙을 팀(1인) 내 인지 상태로 남긴다(주석 또는 README 1줄).
 
 #### FE-02. shared 계층 구현
 
@@ -222,10 +222,10 @@ PRD 8절에 이미 Day1(백엔드+DB)/Day2(프론트+통합)의 개략적 일정
   - `shared/lib/validators.ts`: 이메일 형식, 비밀번호 길이 등 클라이언트 측 보조 검증 함수를 구현한다(서버 검증 대체 아님).
   - `shared/types/domain.ts`: EN-01~03 공용 타입 및 Status 유니온 타입(`'시작전' | '진행중' | '완료' | '기한초과'`)을 정의한다.
 - 완료 조건:
-  - [ ] `client.ts`를 통한 API 호출이 access_token을 자동으로 첨부하며, 401 응답 시 refresh 후 원 요청을 재시도하는 로직이 동작한다.
-  - [ ] ConfirmDialog가 삭제 계열 액션에서 재사용 가능한 형태로 구현되어 있다.
-  - [ ] validators.ts의 이메일/비밀번호 검증 함수가 단독 호출로 정상 동작함을 확인했다.
-  - [ ] domain.ts에 User/Category/Todo 타입과 Status 유니온 타입이 정의되어 있다.
+  - [x] `client.ts`를 통한 API 호출이 access_token을 자동으로 첨부하며, 401 응답 시 refresh 후 원 요청을 재시도하는 로직이 동작한다.
+  - [x] ConfirmDialog가 삭제 계열 액션에서 재사용 가능한 형태로 구현되어 있다.
+  - [x] validators.ts의 이메일/비밀번호 검증 함수가 단독 호출로 정상 동작함을 확인했다.
+  - [x] domain.ts에 User/Category/Todo 타입과 Status 유니온 타입이 정의되어 있다.
 
 #### FE-03. entities 계층 구현
 
@@ -236,10 +236,10 @@ PRD 8절에 이미 Day1(백엔드+DB)/Day2(프론트+통합)의 개략적 일정
   - `entities/category`: `model/useCategoryList.ts`(TanStack Query 조회 훅), `api/categories.api.ts`, `ui/CategoryBadge.tsx`, `index.ts`를 구현한다.
   - `entities/todo`: `model/useTodoList.ts`(TanStack Query 조회 훅, 카테고리·상태 필터 파라미터 지원), `model/todoStatus.ts`(BR-06 클라이언트 표시용 상태 계산 — 백엔드 계산 결과를 신뢰하되 즉시 반영용 보조 계산), `api/todos.api.ts`, `ui/TodoCard.tsx`, `index.ts`를 구현한다.
 - 완료 조건:
-  - [ ] `useTodoList`, `useCategoryList` 훅이 각각 API를 호출해 캐싱된 목록 데이터를 반환한다(BE-05, BE-06 API 스펙 기준).
-  - [ ] `authStore`가 로그인 후 access_token과 사용자 정보를 보관하고, 로그아웃 시 초기화된다.
-  - [ ] `TodoCard`, `CategoryBadge` 컴포넌트가 각각 단일 항목을 표시용으로만 렌더링하며 생성/수정/삭제 로직을 포함하지 않는다(entities는 조회 전용).
-  - [ ] 각 슬라이스는 `index.ts`를 통해서만 외부에 공개된다.
+  - [x] `useTodoList`, `useCategoryList` 훅이 각각 API를 호출해 캐싱된 목록 데이터를 반환한다(BE-05, BE-06 API 스펙 기준).
+  - [x] `authStore`가 로그인 후 access_token과 사용자 정보를 보관하고, 로그아웃 시 초기화된다.
+  - [x] `TodoCard`, `CategoryBadge` 컴포넌트가 각각 단일 항목을 표시용으로만 렌더링하며 생성/수정/삭제 로직을 포함하지 않는다(entities는 조회 전용).
+  - [x] 각 슬라이스는 `index.ts`를 통해서만 외부에 공개된다.
 
 #### FE-04. 인증 화면 구현 (SC-01/SC-02)
 
