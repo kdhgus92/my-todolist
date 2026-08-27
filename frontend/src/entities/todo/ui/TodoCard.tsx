@@ -1,9 +1,9 @@
 import type { Todo, Category, TodoStatus } from '../../../shared/types/domain';
 
 const STATUS_COLOR: Record<TodoStatus, { color: string; bg: string }> = {
-  '시작전': { color: 'var(--color-text-muted)', bg: '#EDEAE2' },
+  '시작전': { color: 'var(--color-text-muted)', bg: 'var(--color-neutral-subtle)' },
   '진행중': { color: 'var(--color-accent-hover)', bg: 'var(--color-accent-subtle)' },
-  '완료': { color: 'var(--color-success)', bg: '#E4F1E8' },
+  '완료': { color: 'var(--color-success)', bg: 'var(--color-success-subtle)' },
   '기한초과': { color: 'var(--color-danger)', bg: 'var(--color-danger-subtle)' },
 };
 

@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
+import './shared/lib/theme'
 import { App } from './app/App.tsx'
 
 if (import.meta.env.DEV) console.log('[my-todolist] app booted')

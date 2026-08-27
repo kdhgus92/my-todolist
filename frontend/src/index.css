@@ -27,6 +27,8 @@
   --color-danger: #C0392B;
   --color-danger-subtle: #FBE9E7;
   --color-success: #2F7D4F;
+  --color-success-subtle: #E4F1E8;
+  --color-neutral-subtle: #EDEAE2;
 
   /* 4.2 타이포그래피 크기/굵기 스케일 (line-height: 제목 1.3, 본문/UI 1.5) */
   --font-h1: 700 1.75rem/1.3 "Noto Serif KR", serif;
@@ -54,6 +56,35 @@
   /* 5.3 Shadow */
   --shadow-sm: 0 1px 2px rgba(31, 30, 28, 0.06);
   --shadow-md: 0 4px 16px rgba(31, 30, 28, 0.12);
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #1C1B19;
+  --color-surface: #262421;
+  --color-surface-hover: #2E2B27;
+
+  --color-text: #EDEAE4;
+  --color-text-muted: #A8A39A;
+  --color-text-inverse: #1C1B19;
+
+  --color-accent: #E2984B;
+  --color-accent-hover: #F0A868;
+  --color-accent-subtle: #3A2C18;
+
+  --color-border: #3A3733;
+  --color-border-strong: #4A4640;
+
+  --color-ink: #EDEAE4;
+  --color-ink-hover: #FFFFFF;
+
+  --color-danger: #E0574A;
+  --color-danger-subtle: #3D211D;
+  --color-success: #4CAF7D;
+  --color-success-subtle: #1F3327;
+  --color-neutral-subtle: #33302B;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 * {
