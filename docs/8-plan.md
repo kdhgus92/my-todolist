@@ -209,7 +209,7 @@ PRD 8절에 이미 Day1(백엔드+DB)/Day2(프론트+통합)의 개략적 일정
   - Zustand, TanStack Query, 라우터 등 최소 의존성만 설치한다.
 - 완료 조건:
   - [ ] `frontend/src` 하위에 app/pages/widgets/features/entities/shared 6개 디렉토리가 생성되어 있다.
-  - [ ] 개발 서버 실행 시 빈 화면이라도 정상 기동되고 `QueryClientProvider`가 앱 전체를 감싸고 있다.
+  - [ ] `npm run dev`로 개발 서버 실행 시 빈 화면이라도 정상 기동되고(브라우저 접속으로 확인) `QueryClientProvider`가 앱 전체를 감싸고 있다.
   - [ ] FSD 계층 규칙(상위→하위 단방향 import)을 ESLint 등으로 강제하지 않더라도, 최소한 문서화된 규칙을 팀(1인) 내 인지 상태로 남긴다(주석 또는 README 1줄).
 
 #### FE-02. shared 계층 구현

@@ -19,6 +19,7 @@
 | DDL | `docs/schema.sql` | ERD 기반 PostgreSQL 17 실제 테이블/인덱스/제약조건 생성 스크립트. |
 | 실행 계획(WBS) | `docs/8-plan.md` | DB/백엔드/프론트엔드 트랙별 Task 분해, 각 Task의 수행 작업·완료 조건(체크박스)·선행 Task. |
 | API 스펙 | `backend/swagger.json` | 백엔드 REST API의 OpenAPI 3.0 스펙(엔드포인트, 요청/응답 스키마, 에러 포맷, 인증 방식). |
+| 스타일 가이드 | `docs/9-style.md` | 프론트엔드 색상/타이포그래피/spacing·radius·shadow 토큰, 버튼·입력필드·카드·모달·배지·체크박스 등 컴포넌트 스타일, 반응형 기준, 아이콘 가이드. |
 
 ## 코딩 작업 원칙 (Andrej Karpathy CLAUDE.md 요약)
 
