@@ -9,6 +9,8 @@ function createMockRes() {
     statusCode: null,
     body: null,
     cookieCalls: [],
+    clearCookieCalls: [],
+    sendCalled: false,
     status(code) {
       this.statusCode = code;
       return this;
@@ -19,6 +21,14 @@ function createMockRes() {
     },
     cookie(name, value, options) {
       this.cookieCalls.push({ name, value, options });
+      return this;
+    },
+    clearCookie(name, options) {
+      this.clearCookieCalls.push({ name, options });
+      return this;
+    },
+    send() {
+      this.sendCalled = true;
       return this;
     },
   };
@@ -145,4 +155,23 @@ test('refresh calls next(err) when authService.refresh throws', async () => {
   assert.strictEqual(res.statusCode, null);
   assert.strictEqual(next.calls.length, 1);
   assert.strictEqual(next.calls[0], err);
+});
+
+test('logout clears the refresh_token cookie and responds 204', async () => {
+  const req = {};
+  const res = createMockRes();
+  const next = createMockNext();
+
+  await authController.logout(req, res, next);
+
+  assert.strictEqual(res.clearCookieCalls.length, 1);
+  assert.strictEqual(res.clearCookieCalls[0].name, 'refresh_token');
+  assert.deepStrictEqual(res.clearCookieCalls[0].options, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'strict',
+  });
+  assert.strictEqual(res.statusCode, 204);
+  assert.strictEqual(res.sendCalled, true);
+  assert.strictEqual(next.calls.length, 0);
 });

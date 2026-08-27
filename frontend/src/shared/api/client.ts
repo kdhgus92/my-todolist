@@ -36,7 +36,7 @@ async function rawFetch(path: string, options: RequestInit = {}): Promise<Respon
   return fetch(`${BASE_URL}${path}`, { ...options, credentials: 'include', headers });
 }
 
-async function refreshAccessToken(): Promise<string> {
+export async function refreshAccessToken(): Promise<string> {
   if (!refreshPromise) {
     refreshPromise = (async () => {
       const res = await fetch(`${BASE_URL}/auth/refresh`, { method: 'POST', credentials: 'include' });
@@ -49,6 +49,14 @@ async function refreshAccessToken(): Promise<string> {
     });
   }
   return refreshPromise;
+}
+
+export async function logoutRequest(): Promise<void> {
+  try {
+    await fetch(`${BASE_URL}/auth/logout`, { method: 'POST', credentials: 'include' });
+  } catch {
+    // best-effort: client-side token is cleared regardless of network outcome
+  }
 }
 
 export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {

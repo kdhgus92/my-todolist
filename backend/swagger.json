@@ -385,6 +385,18 @@
         }
       }
     },
+    "/auth/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "로그아웃",
+        "description": "HttpOnly 쿠키에 담긴 refresh_token을 서버에서 만료 처리한다. access_token은 클라이언트 메모리에서 별도로 폐기한다(PRD 6.3절).",
+        "responses": {
+          "204": {
+            "description": "로그아웃 성공"
+          }
+        }
+      }
+    },
     "/users/me": {
       "patch": {
         "tags": ["Users"],

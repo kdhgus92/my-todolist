@@ -34,4 +34,13 @@ async function refresh(req, res, next) {
   }
 }
 
-module.exports = { signup, login, refresh };
+async function logout(req, res, next) {
+  try {
+    res.clearCookie('refresh_token', { httpOnly: true, secure: true, sameSite: 'strict' });
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { signup, login, refresh, logout };
