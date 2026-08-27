@@ -5,6 +5,7 @@ const errorHandler = require('./middlewares/errorHandler');
 const authRoutes = require('./routes/auth.routes');
 const usersRoutes = require('./routes/users.routes');
 const categoriesRoutes = require('./routes/categories.routes');
+const todosRoutes = require('./routes/todos.routes');
 
 function createHealthHandler(pool) {
   return async (req, res) => {
@@ -24,6 +25,7 @@ app.get('/health', createHealthHandler(pool));
 app.use('/auth', authRoutes);
 app.use('/users', usersRoutes);
 app.use('/categories', categoriesRoutes);
+app.use('/todos', todosRoutes);
 
 app.use(errorHandler);
 
