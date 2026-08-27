@@ -5,6 +5,7 @@
 | 버전 | 날짜 | 변경 내용 | 작성자 |
 |---|---|---|---|
 | 0.1 | 2026-08-26 | 최초 작성 | ohhyeun |
+| 0.2 | 2026-08-27 | 실제 구현과의 정합성 점검 결과 반영: 카테고리명 중복 비교 처리 위치를 애플리케이션 계층에서 DB 유니크 인덱스로 정정(3절) | ohhyeun |
 
 ## 1. 문서 개요
 
@@ -55,7 +56,7 @@ erDiagram
 
 ## 3. 제약조건 보충
 
-- `categories.name`은 (user_id, name) 조합 유니크(대소문자 무시, 트림 비교는 애플리케이션 계층에서 처리, EN-02/BR-08).
+- `categories.name`은 (user_id, name) 조합 유니크(대소문자 무시, 앞뒤 공백 트림 비교는 DB 유니크 인덱스 `uq_categories_user_name`이 `lower(trim(name))` 식으로 직접 처리하며, 애플리케이션 계층은 위반 시 발생하는 에러를 응답 형식으로 매핑만 한다, EN-02/BR-08).
 - `categories`: 사용자당 `is_default = true`인 행이 정확히 1개 존재해야 하며(EN-02), 해당 행은 삭제할 수 없다(BR-04).
 - `todos`: `end_date >= start_date` 제약(BR-05).
 - 인덱스: `users.email`, `todos.user_id`, `todos.category_id`(구조 설계 원칙 6절).

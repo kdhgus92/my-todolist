@@ -7,6 +7,7 @@
 | 0.1 | 2026-08-26 | 최초 작성 | ohhyeun |
 | 0.2 | 2026-08-26 | 최상위 원칙에 단일 책임 원칙(SRP) 항목 추가 | ohhyeun |
 | 0.3 | 2026-08-26 | 프론트엔드 디렉토리 구조를 Feature-Sliced Design(FSD)으로 변경 (3.2, 7.2절) | ohhyeun |
+| 0.4 | 2026-08-27 | DB-01/02·BE-01~07 실제 구현과의 정합성 점검 결과 반영: 백엔드 디렉토리 구조(7.1절) 보완, BR-08 카테고리명 중복 검증 방식 정정(5절), 테스트 범위 확대 반영(5절), CORS·Swagger UI·로그인 실패 응답·소유권 검증 예외 명시(2절 6항, 6절) | ohhyeun |
 
 ## 1. 문서 개요
 
@@ -30,7 +31,7 @@ my-todolist는 1인 개발, 2일 일정, 단일 인스턴스 운영을 전제로
 3. **단일 책임 원칙(SRP).** 파일·함수·모듈은 하나의 변경 이유만 가져야 한다. 라우트는 매핑만, 컨트롤러는 req/res 변환만, 서비스는 하나의 비즈니스 규칙(BR-xx)만, 데이터 접근 모듈은 한 테이블의 쿼리만 담당한다(3절에서 계층별로 구체화). 한 함수가 검증+저장+응답변환을 동시에 하는 등 여러 책임이 섞이면 계층을 나눈 의미가 없어지므로, 계층 경계를 SRP 판단 기준으로 삼는다.
 4. **단방향 데이터 흐름.** 프론트엔드는 서버 상태(할일/카테고리 목록)와 클라이언트 상태(로그인 여부 등)를 명확히 분리하고, UI는 상태를 조회만 하며 변경은 정해진 액션(TanStack Query mutation, Zustand action)을 통해서만 이루어진다. 백엔드는 요청이 라우트 → 서비스 → 데이터 접근 순으로만 흐르고 역방향 호출이 없다(3절 참조).
 5. **실용주의.** 완벽한 설계보다 2일 안에 UC-01~06(PRD 3.1절)을 안전하게 구현·검증할 수 있는 구조를 우선한다. 판단이 갈리는 지점에서는 "더 적은 코드로, 더 적은 개념으로" 해결되는 쪽을 택한다.
-6. **소유권 검증은 예외 없이 공통 경로를 통과시킨다.** BR-02(본인 소유만 CRUD 가능)는 모든 Category/Todo API에 적용되는 규칙이므로, 각 컨트롤러/서비스에서 개별적으로 재구현하지 않고 공통 미들웨어 또는 공통 서비스 함수 하나로 처리해 빠짐을 방지한다.
+6. **소유권 검증은 예외 없이 공통 경로를 통과시킨다.** BR-02(본인 소유만 CRUD 가능)는 모든 Category/Todo API에 적용되는 규칙이므로, 각 컨트롤러/서비스에서 개별적으로 재구현하지 않고 공통 함수(`utils/ownership.js`의 `assertOwnership`)로 처리해 빠짐을 방지한다. 단, 이 원칙은 "요청 대상 리소스(할일/카테고리 자체)의 소유자가 요청자와 같은가"에 한정되며, Todo 등록/수정 시 본문으로 넘어오는 `categoryId`가 실제로 요청자 소유 카테고리인지까지는 검증하지 않는다(1인 2일 규모에서 타인 categoryId를 알아내 악용할 실익이 낮다고 판단한 YAGNI 결정, BE-06 범위).
 
 ## 3. 의존성/레이어 원칙
 
@@ -73,11 +74,12 @@ my-todolist는 1인 개발, 2일 일정, 단일 인스턴스 운영을 전제로
 PRD 9절은 "테스트 커버리지 부족"을 이미 리스크로 명시하고 있다. 이를 감추지 않고, 제한된 시간 안에서 리스크가 큰 지점에만 테스트를 선별 투입하는 전략을 취한다.
 
 - **반드시 자동화 테스트를 작성하는 대상**: 순수 함수로 분리 가능하고 회귀 위험이 큰 핵심 비즈니스 로직만 대상으로 한다.
-  - BR-05: 종료일자 ≥ 시작일자 검증 함수
-  - BR-06: 상태(시작전/진행중/완료/기한초과) 판정 함수 (도메인 정의서 4.4절의 4가지 분기 전부)
-  - BR-08 중 카테고리명 중복 비교 로직(대소문자 무시, 공백 트림)
-  - 위 세 로직은 DB나 HTTP에 의존하지 않는 순수 함수로 구현해 단위 테스트를 붙이기 쉽게 만든다(테스트 용이성 자체가 함수 분리의 근거가 된다).
-- **테스트하지 않는 것(의도적 생략)**: 컨트롤러/라우트 통합 테스트, E2E 테스트, 프론트엔드 컴포넌트 테스트는 2일 일정상 생략하고 수동 확인으로 대체한다(PRD 9절 리스크로 이미 인지). 새 테스트 프레임워크나 커버리지 도구 도입 없이, Node.js 내장 `node:test` + `assert`만으로 위 핵심 로직 테스트를 작성해 별도 설정 비용을 없앤다.
+  - BR-05: 종료일자 ≥ 시작일자 검증 함수(`utils/todoRules.js`의 `isValidDateRange`)
+  - BR-06: 상태(시작전/진행중/완료/기한초과) 판정 함수(`utils/todoRules.js`의 `computeStatus`, 도메인 정의서 4.4절의 4가지 분기 전부)
+  - BR-08 중 카테고리명 중복 비교 로직(대소문자 무시, 공백 트림): 실제 중복 검증 자체는 DB 유니크 인덱스 `uq_categories_user_name`(`lower(trim(name))`, 7-erd.md 3절)가 담당하고 서비스 계층은 위반 시 발생하는 `23505` 에러를 `CATEGORY_NAME_ALREADY_EXISTS`로 매핑만 한다. `utils/categoryRules.js`의 순수 함수(`normalizeCategoryName`/`areCategoryNamesEqual`)는 이 비교 규칙의 명세이자 단위테스트 대상으로만 존재하며 실행 경로에서 호출되지 않는다.
+  - 위 로직들은 DB나 HTTP에 의존하지 않는 순수 함수로 구현해 단위 테스트를 붙이기 쉽게 만든다(테스트 용이성 자체가 함수 분리의 근거가 된다).
+- **실제로는 위 핵심 로직 외에 컨트롤러/서비스/리포지토리/미들웨어/유틸 전반에도 `node:test` 단위테스트를 추가했다**(의존 대상을 목(mock)으로 대체하는 순수 단위테스트이며, 실제 DB·HTTP를 띄우는 통합 테스트는 아니다). 최소 대상은 위 세 로직이라는 기준은 유지하되, 시간이 허용되어 커버리지를 넓힌 결과다.
+- **테스트하지 않는 것(의도적 생략)**: 실제 DB/HTTP를 띄우는 컨트롤러·라우트 통합 테스트, E2E 테스트, 프론트엔드 컴포넌트 테스트는 2일 일정상 생략하고 수동 확인으로 대체한다(PRD 9절 리스크로 이미 인지). 새 테스트 프레임워크나 커버리지 도구 도입 없이, Node.js 내장 `node:test` + `assert`만으로 테스트를 작성해 별도 설정 비용을 없앤다.
 - **린트/포맷터**: 프론트엔드(TypeScript)와 백엔드(JavaScript)에 각각 ESLint를 적용하고, Prettier로 포맷을 통일한다. 커밋 전 수동 실행 수준으로 충분하며, CI 파이프라인 구축(PRD 10절 향후 과제)은 범위 밖이다.
 - **수동 확인 기준**: UC-01~06(도메인 정의서 7절)의 수용 기준(Given-When-Then)을 그대로 수동 체크리스트로 사용해 Day 2 통합 단계(PRD 8절)에서 훑는다. 별도 체크리스트 문서를 새로 만들지 않고 도메인 정의서의 수용 기준을 그대로 활용한다.
 
@@ -86,8 +88,10 @@ PRD 9절은 "테스트 커버리지 부족"을 이미 리스크로 명시하고 
 - **환경변수**: DB 접속 정보(host/port/user/password/database), JWT 시크릿(access/refresh 각각 별도 키 권장), 포트 번호, 토큰 만료 시간(PRD 6.3절: access 15분~1시간, refresh 7일~14일) 등은 모두 `.env` 기반 환경변수로 관리하고 코드에 하드코딩하지 않는다. `.env`는 `.gitignore`에 포함하고 `.env.example`만 저장소에 커밋한다.
 - **비밀번호(BR-08, EN-01)**: bcrypt 등 단방향 해시 알고리즘으로 저장 전 해싱하며, 평문 비밀번호는 로그에도 남기지 않는다.
 - **JWT 토큰 보안(PRD 6.3절)**: access_token은 짧은 만료(15분~1시간)로 발급해 Authorization Bearer 헤더로만 전송하고 서버 저장소에 영속화하지 않는다(클라이언트도 메모리 보관만, localStorage 금지). refresh_token은 HttpOnly + Secure + SameSite 속성의 쿠키로만 전달하며, 자바스크립트에서 접근 불가능해야 한다. refresh_token의 서버 측 화이트리스트/블랙리스트 관리는 PRD 10절에 따라 MVP 범위에서 제외한다.
-- **CORS**: 프론트엔드 배포 오리진만 허용 목록에 등록하고, credentials(쿠키 전송)를 허용하는 경우 와일드카드(`*`) origin은 사용하지 않는다.
+- **CORS**: 프론트엔드 배포 오리진만 허용 목록에 등록하고, credentials(쿠키 전송)를 허용하는 경우 와일드카드(`*`) origin은 사용하지 않는다. 허용 오리진은 `FRONTEND_ORIGIN` 환경변수로 지정하며, 미지정 시 로컬 개발 기본값(`http://localhost:5173`)을 사용한다.
 - **인가(BR-01, BR-02)**: 인증 미들웨어가 모든 보호 라우트에서 JWT를 검증하고, 소유권 검증(BR-02)은 3.1절에서 정의한 공통 경로를 통해서만 수행해 개별 엔드포인트 구현 누락을 방지한다.
+- **로그인 실패 응답**: 이메일이 존재하지 않는 경우와 비밀번호가 틀린 경우를 구분하지 않고 동일한 `401 INVALID_CREDENTIALS` 응답으로 통일해, 응답 차이를 통한 이메일 등록 여부 유추(계정 열거, user enumeration)를 방지한다.
+- **API 문서(Swagger UI)**: `NODE_ENV`가 `production`이 아닐 때만 `/api-docs`에 `swagger-ui-express`로 `backend/swagger.json`을 마운트한다. 운영 환경에서는 노출하지 않는다.
 - **로깅 최소 기준**: 요청 단위로 method/path/status/응답시간을 표준 출력에 기록하는 수준의 최소 구조화 로깅만 적용한다(전용 로깅 인프라나 로그 수집 시스템은 PRD 10절 향후 과제로 남긴다). 비밀번호, 토큰 원문 등 민감정보는 어떤 로그에도 남기지 않는다.
 - **DB 커넥션 풀링/인덱스**: PRD 7절의 방침(Pool 크기 10~20, users.email·todos.user_id·todos.category_id 인덱스)을 그대로 구현 기준으로 채택한다.
 - **헬스 체크**: `GET /health` 등 단일 엔드포인트로 서버 및 DB 연결 상태만 간단히 확인 가능하게 한다. 별도 메트릭 수집(Prometheus 등)은 이 규모에서 과설계이므로 도입하지 않는다.
@@ -105,6 +109,7 @@ backend/
 │   ├── middlewares/
 │   │   ├── auth.js            # JWT 검증 미들웨어 (BR-01)
 │   │   ├── errorHandler.js    # 공통 에러 응답 포맷
+│   │   ├── requestLogger.js   # 요청 단위 method/path/status/응답시간 로깅 (6절)
 │   │   └── validate.js        # 요청 바디 유효성 검증
 │   ├── routes/
 │   │   ├── auth.routes.js     # UC-01 회원가입/로그인/토큰 재발급
@@ -128,15 +133,22 @@ backend/
 │   ├── utils/
 │   │   ├── caseMapper.js      # snake_case <-> camelCase 변환 (4절)
 │   │   ├── password.js        # 해시/검증
-│   │   └── jwt.js             # access/refresh 토큰 발급/검증
-│   └── app.js                 # Express 앱 조립 (미들웨어/라우트 등록)
+│   │   ├── jwt.js             # access/refresh 토큰 발급/검증
+│   │   ├── appError.js        # 공통 에러 클래스 (statusCode/code/message)
+│   │   ├── ownership.js       # 소유권 검증 공통 함수 (BR-02, 2절 6항)
+│   │   ├── cookies.js         # refresh_token 쿠키 파싱
+│   │   ├── todoRules.js       # BR-05 날짜 검증, BR-06 상태 판정 순수 함수
+│   │   └── categoryRules.js   # BR-08 카테고리명 비교 규칙 명세(순수 함수, 5절 참조)
+│   └── app.js                 # Express 앱 조립 (미들웨어/라우트/Swagger UI 등록)
 ├── migrations/
 │   └── 001_init.sql           # users/categories/todos 테이블, 인덱스 (PRD 7절)
-├── test/
+├── test/                      # node:test 단위테스트 (5절 참조, 아래는 대표 파일 예시)
 │   ├── todoStatus.test.js     # BR-06 상태 판정
 │   ├── todoDateValidation.test.js  # BR-05 날짜 검증
-│   └── categoryNameCompare.test.js # BR-08 카테고리명 중복 비교
+│   ├── categoryNameCompare.test.js # BR-08 카테고리명 중복 비교
+│   └── (그 외 controllers/services/repositories/middlewares/utils 단위테스트 다수)
 ├── server.js                  # 진입점 (app.listen)
+├── swagger.json                # OpenAPI 3.0 스펙 (API 스펙 문서)
 ├── .env.example
 └── package.json
 ```
