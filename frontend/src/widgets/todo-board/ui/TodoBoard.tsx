@@ -4,10 +4,12 @@ import { useTodoList, TodoCard } from '../../../entities/todo';
 import { useCategoryList } from '../../../entities/category';
 import { apiFetch } from '../../../shared/api/client';
 import { DeleteTodoButton } from '../../../features/delete-todo';
+import { useTranslation } from '../../../shared/lib/i18n';
 import type { Todo } from '../../../shared/types/domain';
 
 export function TodoBoard() {
   const [searchParams] = useSearchParams();
+  const { t } = useTranslation();
   const categoryId = searchParams.get('categoryId') || undefined;
   const status = (searchParams.get('status') || undefined) as Todo['status'] | undefined;
   const { data: todos, isLoading } = useTodoList({ categoryId, status });
@@ -26,8 +28,8 @@ export function TodoBoard() {
     },
   });
 
-  if (isLoading) return <p style={{ font: 'var(--font-body)', color: 'var(--color-text-muted)' }}>불러오는 중...</p>;
-  if (!todos || todos.length === 0) return <p style={{ font: 'var(--font-body)', color: 'var(--color-text-muted)' }}>표시할 할일이 없습니다.</p>;
+  if (isLoading) return <p style={{ font: 'var(--font-body)', color: 'var(--color-text-muted)' }}>{t('todoList', 'loading')}</p>;
+  if (!todos || todos.length === 0) return <p style={{ font: 'var(--font-body)', color: 'var(--color-text-muted)' }}>{t('todoList', 'empty')}</p>;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>

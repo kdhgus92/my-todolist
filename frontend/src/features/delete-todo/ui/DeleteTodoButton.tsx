@@ -5,11 +5,13 @@ import { apiFetch, ApiError } from '../../../shared/api/client';
 import { Button } from '../../../shared/ui/Button';
 import { ConfirmDialog } from '../../../shared/ui/ConfirmDialog';
 import { FormFieldError } from '../../../shared/ui/FormFieldError';
+import { useTranslation } from '../../../shared/lib/i18n';
 
 export function DeleteTodoButton({ todoId }: { todoId: string }) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { t, tError } = useTranslation();
 
   const mutation = useMutation({
     mutationFn: () => apiFetch<void>(`/todos/${todoId}`, { method: 'DELETE' }),
@@ -27,16 +29,18 @@ export function DeleteTodoButton({ todoId }: { todoId: string }) {
   return (
     <div style={{ marginTop: 'var(--space-4)' }}>
       <Button type="button" variant="danger" onClick={() => setOpen(true)}>
-        삭제
+        {t('todoForm', 'delete')}
       </Button>
       <ConfirmDialog
         open={open}
-        title="정말 삭제하시겠습니까?"
-        message="이 작업은 되돌릴 수 없습니다."
+        title={t('confirm', 'deleteTitle')}
+        message={t('confirm', 'deleteMessage')}
         onConfirm={() => mutation.mutate()}
         onCancel={() => setOpen(false)}
       />
-      <FormFieldError message={mutation.error instanceof ApiError ? mutation.error.message : undefined} />
+      <FormFieldError
+        message={mutation.error instanceof ApiError ? tError(mutation.error.code, mutation.error.message) : undefined}
+      />
     </div>
   );
 }

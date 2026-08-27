@@ -1,3 +1,4 @@
+import { useTranslation } from '../../../shared/lib/i18n';
 import type { Todo, Category, TodoStatus } from '../../../shared/types/domain';
 
 const STATUS_COLOR: Record<TodoStatus, { color: string; bg: string }> = {
@@ -14,6 +15,7 @@ export interface TodoCardProps {
 }
 
 export function TodoCard({ todo, category, onToggleDone }: TodoCardProps) {
+  const { t } = useTranslation();
   const statusStyle = STATUS_COLOR[todo.status];
   return (
     <div className="todo-card" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
@@ -27,7 +29,7 @@ export function TodoCard({ todo, category, onToggleDone }: TodoCardProps) {
         </div>
       </div>
       <span style={{ color: statusStyle.color, background: statusStyle.bg, borderRadius: 'var(--radius-sm)', padding: '2px 10px', fontSize: 12, fontWeight: 700 }}>
-        {todo.status}
+        {t('status', todo.status)}
       </span>
     </div>
   );

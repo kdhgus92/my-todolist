@@ -6,6 +6,7 @@ import { Input } from '../../../shared/ui/Input';
 import { Button } from '../../../shared/ui/Button';
 import { FormFieldError } from '../../../shared/ui/FormFieldError';
 import { useAuthStore } from '../../../entities/user';
+import { useTranslation } from '../../../shared/lib/i18n';
 import type { User } from '../../../shared/types/domain';
 
 interface LoginResponse {
@@ -17,6 +18,7 @@ export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { t, tError } = useTranslation();
 
   const mutation = useMutation({
     mutationFn: () =>
@@ -34,7 +36,8 @@ export function LoginForm() {
     },
   });
 
-  const errorMessage = mutation.error instanceof ApiError ? mutation.error.message : undefined;
+  const errorMessage =
+    mutation.error instanceof ApiError ? tError(mutation.error.code, mutation.error.message) : undefined;
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -45,11 +48,11 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-        <Input label="이메일" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <Input label="비밀번호" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Input label={t('login', 'email')} type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Input label={t('login', 'password')} type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <FormFieldError message={errorMessage} />
         <Button type="submit" disabled={mutation.isPending} style={{ width: '100%' }}>
-          로그인
+          {t('login', 'submit')}
         </Button>
       </div>
     </form>

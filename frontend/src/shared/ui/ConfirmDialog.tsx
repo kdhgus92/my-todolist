@@ -1,4 +1,5 @@
 import { Button } from './Button';
+import { useTranslation } from '../lib/i18n';
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -10,7 +11,8 @@ interface ConfirmDialogProps {
   onCancel: () => void;
 }
 
-export function ConfirmDialog({ open, title, message, confirmLabel = '삭제', cancelLabel = '취소', onConfirm, onCancel }: ConfirmDialogProps) {
+export function ConfirmDialog({ open, title, message, confirmLabel, cancelLabel, onConfirm, onCancel }: ConfirmDialogProps) {
+  const { t } = useTranslation();
   if (!open) return null;
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(43,42,40,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -18,8 +20,8 @@ export function ConfirmDialog({ open, title, message, confirmLabel = '삭제', c
         <h2 style={{ font: 'var(--font-h2)', margin: 0 }}>{title}</h2>
         <p style={{ font: 'var(--font-body)', color: 'var(--color-text-muted)', margin: 'var(--space-3) 0 var(--space-5)' }}>{message}</p>
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)' }}>
-          <Button variant="secondary" onClick={onCancel}>{cancelLabel}</Button>
-          <Button variant="danger" onClick={onConfirm}>{confirmLabel}</Button>
+          <Button variant="secondary" onClick={onCancel}>{cancelLabel ?? t('confirm', 'cancel')}</Button>
+          <Button variant="danger" onClick={onConfirm}>{confirmLabel ?? t('confirm', 'delete')}</Button>
         </div>
       </div>
     </div>

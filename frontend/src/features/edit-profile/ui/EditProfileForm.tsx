@@ -5,10 +5,12 @@ import { Input } from '../../../shared/ui/Input';
 import { Button } from '../../../shared/ui/Button';
 import { FormFieldError } from '../../../shared/ui/FormFieldError';
 import { updateMe, useAuthStore } from '../../../entities/user';
+import { useTranslation } from '../../../shared/lib/i18n';
 
 export function EditProfileForm() {
   const [name, setName] = useState(() => useAuthStore.getState().user!.name);
   const [showSuccess, setShowSuccess] = useState(false);
+  const { t, tError } = useTranslation();
 
   const mutation = useMutation({
     mutationFn: () => updateMe(name),
@@ -22,7 +24,8 @@ export function EditProfileForm() {
     },
   });
 
-  const otherError = mutation.error instanceof ApiError ? mutation.error.message : undefined;
+  const otherError =
+    mutation.error instanceof ApiError ? tError(mutation.error.code, mutation.error.message) : undefined;
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -34,7 +37,7 @@ export function EditProfileForm() {
     <form onSubmit={handleSubmit}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
         <Input
-          label="이름"
+          label={t('myPage', 'name')}
           value={name}
           onChange={(e) => {
             setName(e.target.value);
@@ -44,11 +47,11 @@ export function EditProfileForm() {
         <FormFieldError message={otherError} />
         {showSuccess && (
           <p style={{ font: 'var(--font-caption)', color: 'var(--color-success)', margin: 0 }}>
-            ✔ 변경 사항이 저장되었습니다.
+            {t('myPage', 'saved')}
           </p>
         )}
         <Button type="submit" disabled={mutation.isPending}>
-          저장
+          {t('myPage', 'save')}
         </Button>
       </div>
     </form>

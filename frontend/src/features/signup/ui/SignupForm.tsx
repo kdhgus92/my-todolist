@@ -6,6 +6,7 @@ import { Input } from '../../../shared/ui/Input';
 import { Button } from '../../../shared/ui/Button';
 import { FormFieldError } from '../../../shared/ui/FormFieldError';
 import { isValidEmail, isValidPassword } from '../../../shared/lib/validators';
+import { useTranslation } from '../../../shared/lib/i18n';
 import type { User } from '../../../shared/types/domain';
 
 export function SignupForm() {
@@ -14,6 +15,7 @@ export function SignupForm() {
   const [name, setName] = useState('');
   const [touched, setTouched] = useState(false);
   const navigate = useNavigate();
+  const { t, tError } = useTranslation();
 
   const mutation = useMutation({
     mutationFn: () =>
@@ -30,12 +32,16 @@ export function SignupForm() {
     },
   });
 
-  const emailError = touched && !isValidEmail(email) ? '올바른 이메일 형식이 아닙니다.' : undefined;
-  const passwordError = touched && !isValidPassword(password) ? '비밀번호는 8자 이상이어야 합니다.' : undefined;
+  const emailError = touched && !isValidEmail(email) ? t('signup', 'invalidEmail') : undefined;
+  const passwordError = touched && !isValidPassword(password) ? t('signup', 'invalidPassword') : undefined;
   const serverEmailError =
-    mutation.error instanceof ApiError && mutation.error.code === 'CONFLICT' ? mutation.error.message : undefined;
+    mutation.error instanceof ApiError && mutation.error.code === 'CONFLICT'
+      ? tError(mutation.error.code, mutation.error.message)
+      : undefined;
   const otherError =
-    mutation.error instanceof ApiError && mutation.error.code !== 'CONFLICT' ? mutation.error.message : undefined;
+    mutation.error instanceof ApiError && mutation.error.code !== 'CONFLICT'
+      ? tError(mutation.error.code, mutation.error.message)
+      : undefined;
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -48,23 +54,23 @@ export function SignupForm() {
     <form onSubmit={handleSubmit}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
         <Input
-          label="이메일"
+          label={t('signup', 'email')}
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           error={emailError ?? serverEmailError}
         />
         <Input
-          label="비밀번호 (8자 이상)"
+          label={t('signup', 'password')}
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           error={passwordError}
         />
-        <Input label="이름" value={name} onChange={(e) => setName(e.target.value)} />
+        <Input label={t('signup', 'name')} value={name} onChange={(e) => setName(e.target.value)} />
         <FormFieldError message={otherError} />
         <Button type="submit" disabled={mutation.isPending} style={{ width: '100%' }}>
-          가입하기
+          {t('signup', 'submit')}
         </Button>
       </div>
     </form>

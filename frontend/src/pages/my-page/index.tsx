@@ -1,9 +1,11 @@
 import { useAuthStore } from '../../entities/user';
 import { Input } from '../../shared/ui/Input';
 import { EditProfileForm } from '../../features/edit-profile';
+import { useTranslation } from '../../shared/lib/i18n';
 
 export default function MyPagePage() {
   const user = useAuthStore((s) => s.user);
+  const { t } = useTranslation();
   if (!user) return null;
 
   return (
@@ -17,7 +19,7 @@ export default function MyPagePage() {
       }}
     >
       <h1 style={{ font: 'var(--font-h1)', color: 'var(--color-ink)', marginBottom: 'var(--space-6)' }}>
-        마이페이지
+        {t('myPage', 'title')}
       </h1>
       <div
         style={{
@@ -34,9 +36,9 @@ export default function MyPagePage() {
         }}
       >
         <div>
-          <Input label="이메일" value={user.email} disabled />
+          <Input label={t('myPage', 'email')} value={user.email} disabled />
           <p style={{ font: 'var(--font-caption)', color: 'var(--color-text-muted)', margin: '4px 0 0' }}>
-            이메일은 수정할 수 없습니다.
+            {t('myPage', 'emailReadonly')}
           </p>
         </div>
         <EditProfileForm />

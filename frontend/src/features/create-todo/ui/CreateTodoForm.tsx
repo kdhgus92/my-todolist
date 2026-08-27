@@ -7,6 +7,7 @@ import { Button } from '../../../shared/ui/Button';
 import { FormFieldError } from '../../../shared/ui/FormFieldError';
 import { isValidDateRange } from '../../../shared/lib/validators';
 import { useCategoryList } from '../../../entities/category';
+import { useTranslation } from '../../../shared/lib/i18n';
 import type { Todo } from '../../../shared/types/domain';
 
 export function CreateTodoForm() {
@@ -18,6 +19,7 @@ export function CreateTodoForm() {
   const { data: categories } = useCategoryList();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { t, tError } = useTranslation();
 
   const mutation = useMutation({
     mutationFn: () =>
@@ -35,12 +37,13 @@ export function CreateTodoForm() {
     },
   });
 
-  const otherError = mutation.error instanceof ApiError ? mutation.error.message : undefined;
+  const otherError =
+    mutation.error instanceof ApiError ? tError(mutation.error.code, mutation.error.message) : undefined;
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!isValidDateRange(startDate, endDate)) {
-      setDateError('종료일자는 시작일자보다 빠를 수 없습니다.');
+      setDateError(t('todoForm', 'dateRangeError'));
       return;
     }
     setDateError(undefined);
@@ -50,16 +53,16 @@ export function CreateTodoForm() {
   return (
     <form onSubmit={handleSubmit}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-        <Input label="제목" value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <Input label={t('todoForm', 'fieldTitle')} value={title} onChange={(e) => setTitle(e.target.value)} required />
         <Input
-          label="시작일자"
+          label={t('todoForm', 'startDate')}
           type="date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
           required
         />
         <Input
-          label="종료일자"
+          label={t('todoForm', 'endDate')}
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
@@ -71,7 +74,7 @@ export function CreateTodoForm() {
             htmlFor="create-todo-category"
             style={{ font: 'var(--font-label)', color: 'var(--color-text-muted)', display: 'block', marginBottom: 'var(--space-1)' }}
           >
-            카테고리
+            {t('todoForm', 'category')}
           </label>
           <select
             id="create-todo-category"
@@ -86,23 +89,23 @@ export function CreateTodoForm() {
               font: 'var(--font-body)',
             }}
           >
-            <option value="">선택 안 함</option>
+            <option value="">{t('todoForm', 'categoryNone')}</option>
             {categories?.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
-                {c.isDefault ? ' (기본)' : ''}
+                {c.isDefault ? ` ${t('todoForm', 'categoryDefaultSuffix')}` : ''}
               </option>
             ))}
           </select>
           {categoryId === '' && (
             <p style={{ font: 'var(--font-caption)', color: 'var(--color-text-muted)', margin: 'var(--space-1) 0 0' }}>
-              미선택 시 '기본' 카테고리가 자동 적용됩니다.
+              {t('todoForm', 'categoryHint')}
             </p>
           )}
         </div>
         <FormFieldError message={otherError} />
         <Button type="submit" disabled={mutation.isPending}>
-          저장
+          {t('todoForm', 'save')}
         </Button>
       </div>
     </form>

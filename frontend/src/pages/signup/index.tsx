@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import { SignupForm } from '../../features/signup';
+import { useTranslation } from '../../shared/lib/i18n';
 
 export default function SignupPage() {
+  const { t } = useTranslation();
   return (
     <div
       style={{
@@ -26,10 +28,10 @@ export default function SignupPage() {
           padding: 'var(--space-5)',
         }}
       >
-        <h2 style={{ font: 'var(--font-h2)', marginTop: 0, marginBottom: 'var(--space-5)' }}>회원가입</h2>
+        <h2 style={{ font: 'var(--font-h2)', marginTop: 0, marginBottom: 'var(--space-5)' }}>{t('signup', 'title')}</h2>
         <SignupForm />
         <p style={{ font: 'var(--font-body)', color: 'var(--color-text-muted)', marginTop: 'var(--space-5)', marginBottom: 0 }}>
-          이미 계정이 있으신가요? <Link to="/login" style={{ color: 'var(--color-accent)' }}>로그인</Link>
+          {t('signup', 'hasAccount')} <Link to="/login" style={{ color: 'var(--color-accent)' }}>{t('signup', 'loginLink')}</Link>
         </p>
       </div>
     </div>

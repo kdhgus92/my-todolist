@@ -1,5 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import { useCategoryList } from '../../../entities/category';
+import { useTranslation } from '../../../shared/lib/i18n';
 import type { TodoStatus } from '../../../shared/types/domain';
 
 const STATUS_OPTIONS: TodoStatus[] = ['시작전', '진행중', '완료', '기한초과'];
@@ -7,6 +8,7 @@ const STATUS_OPTIONS: TodoStatus[] = ['시작전', '진행중', '완료', '기�
 export function FilterBar() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: categories } = useCategoryList();
+  const { t } = useTranslation();
   const categoryId = searchParams.get('categoryId') ?? '';
   const status = searchParams.get('status') ?? '';
 
@@ -25,7 +27,7 @@ export function FilterBar() {
         onChange={(e) => updateParam('categoryId', e.target.value)}
         style={{ padding: 'var(--space-2) var(--space-3)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)' }}
       >
-        <option value="">전체 카테고리</option>
+        <option value="">{t('todoList', 'allCategories')}</option>
         {categories?.map((c) => (
           <option key={c.id} value={c.id}>
             {c.name}
@@ -37,10 +39,10 @@ export function FilterBar() {
         onChange={(e) => updateParam('status', e.target.value)}
         style={{ padding: 'var(--space-2) var(--space-3)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)' }}
       >
-        <option value="">전체 상태</option>
+        <option value="">{t('todoList', 'allStatuses')}</option>
         {STATUS_OPTIONS.map((s) => (
           <option key={s} value={s}>
-            {s}
+            {t('status', s)}
           </option>
         ))}
       </select>
