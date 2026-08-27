@@ -332,3 +332,6 @@ PRD 8절에 이미 Day1(백엔드+DB)/Day2(프론트+통합)의 개략적 일정
 1. TodoBoard 행 클릭이 자식 요소의 `stopPropagation`에 전부 가로막혀 실제로는 빈 여백을 눌러야만 수정화면으로 이동하던 버그 — 사용자 리포트로 FE-08 완료 후 발견, 즉시 수정 완료(커밋 `c42dcc2`).
 2. Header/FilterBar에서 반응형 클래스와 충돌하는 인라인 `style={{display:'flex',...}}`가 미디어쿼리를 무력화해 모바일 폭에서 햄버거 메뉴가 전혀 동작하지 않던 버그 — FE-08 자체 검증 중 발견, 즉시 수정 완료(커밋 `4047eb8`).
 3. 그 외 FE-09 전체 통합 재검증(UC-01~06, access_token 만료→refresh)에서 신규 결함 없음.
+
+**FE-09 이후 범위外 추가 작업** (WBS Task ID 없음, 사용자 요청으로 수행 — 새 Task 항목은 만들지 않음, YAGNI):
+- 새로고침 시 로그인 세션이 매번 풀리는 문제를 사용자가 지적해 부팅 시 `POST /auth/refresh`로 세션을 복구하도록 프론트에 추가(`entities/user/model/bootstrapAuth.ts`). 이 과정에서 "로그아웃해도 refresh_token 쿠키가 남아 자동 재로그인되는" 회귀 버그가 드러나 백엔드에 `POST /auth/logout`(refresh_token 쿠키 clearCookie)을 신규 추가했다(커밋 `09cb4a5`). backend test 169/169 통과, swagger.json 갱신, 실브라우저로 재검증 완료.

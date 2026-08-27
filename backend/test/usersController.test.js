@@ -99,3 +99,29 @@ test('updateMe calls next(err) when usersService.updateProfile throws', async ()
   assert.strictEqual(next.calls.length, 1);
   assert.strictEqual(next.calls[0], err);
 });
+
+test('getMe responds 200 with the current user on success', async () => {
+  const user = { id: 1, email: 'user@example.com', name: '홍길동', createdAt: '2026-01-01T00:00:00.000Z' };
+  const req = { user: { id: 1 } };
+  const res = createMockRes();
+  const next = createMockNext();
+
+  await withMock(usersService, 'getProfile', async () => user, () => usersController.getMe(req, res, next));
+
+  assert.strictEqual(res.statusCode, 200);
+  assert.deepStrictEqual(res.body, user);
+  assert.strictEqual(next.calls.length, 0);
+});
+
+test('getMe calls next(err) when usersService.getProfile throws', async () => {
+  const err = new AppError(404, 'NOT_FOUND', '사용자를 찾을 수 없습니다.');
+  const req = { user: { id: 1 } };
+  const res = createMockRes();
+  const next = createMockNext();
+
+  await withMock(usersService, 'getProfile', async () => { throw err; }, () => usersController.getMe(req, res, next));
+
+  assert.strictEqual(res.statusCode, null);
+  assert.strictEqual(next.calls.length, 1);
+  assert.strictEqual(next.calls[0], err);
+});

@@ -12,6 +12,7 @@ const updateMeSchema = {
 };
 
 const router = express.Router();
+router.get('/me', authenticate, usersController.getMe);
 router.patch('/me', authenticate, validate(updateMeSchema), usersController.updateMe);
 
 module.exports = router;

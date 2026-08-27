@@ -9,4 +9,13 @@ async function updateMe(req, res, next) {
   }
 }
 
-module.exports = { updateMe };
+async function getMe(req, res, next) {
+  try {
+    const user = await usersService.getProfile(req.user.id);
+    res.status(200).json(user);
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { updateMe, getMe };

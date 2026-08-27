@@ -6,6 +6,11 @@ async function findByEmail(email, client = pool) {
   return toCamelCase(result.rows[0]) || null;
 }
 
+async function findById(id, client = pool) {
+  const result = await client.query('SELECT * FROM users WHERE id = $1', [id]);
+  return toCamelCase(result.rows[0]) || null;
+}
+
 async function create({ email, password, name }, client = pool) {
   const result = await client.query(
     'INSERT INTO users (email, password, name) VALUES ($1, $2, $3) RETURNING *',
@@ -22,4 +27,4 @@ async function updateName(id, name, client = pool) {
   return toCamelCase(result.rows[0]);
 }
 
-module.exports = { findByEmail, create, updateName };
+module.exports = { findByEmail, findById, create, updateName };
