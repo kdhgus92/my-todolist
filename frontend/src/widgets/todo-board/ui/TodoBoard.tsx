@@ -32,18 +32,23 @@ export function TodoBoard() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
       {todos.map((todo) => (
-        <div key={todo.id} onClick={() => navigate(`/todos/${todo.id}/edit`)} style={{ cursor: 'pointer' }}>
+        <div
+          key={todo.id}
+          onClick={(e) => {
+            if ((e.target as HTMLElement).closest('input, button')) return;
+            navigate(`/todos/${todo.id}/edit`);
+          }}
+          style={{ cursor: 'pointer' }}
+        >
           <div className="todo-row" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-            <div style={{ flex: 1 }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ flex: 1 }}>
               <TodoCard
                 todo={todo}
                 category={categories?.find((c) => c.id === todo.categoryId)}
                 onToggleDone={() => toggleMutation.mutate(todo)}
               />
             </div>
-            <div onClick={(e) => e.stopPropagation()}>
-              <DeleteTodoButton todoId={todo.id} />
-            </div>
+            <DeleteTodoButton todoId={todo.id} />
           </div>
         </div>
       ))}
