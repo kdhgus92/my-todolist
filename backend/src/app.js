@@ -4,6 +4,7 @@ const requestLogger = require('./middlewares/requestLogger');
 const errorHandler = require('./middlewares/errorHandler');
 const authRoutes = require('./routes/auth.routes');
 const usersRoutes = require('./routes/users.routes');
+const categoriesRoutes = require('./routes/categories.routes');
 
 function createHealthHandler(pool) {
   return async (req, res) => {
@@ -22,6 +23,7 @@ app.use(requestLogger);
 app.get('/health', createHealthHandler(pool));
 app.use('/auth', authRoutes);
 app.use('/users', usersRoutes);
+app.use('/categories', categoriesRoutes);
 
 app.use(errorHandler);
 
