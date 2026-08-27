@@ -12,6 +12,7 @@ import type { User } from '../../../shared/types/domain';
 export function SignupForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
   const [name, setName] = useState('');
   const [touched, setTouched] = useState(false);
   const navigate = useNavigate();
@@ -34,6 +35,8 @@ export function SignupForm() {
 
   const emailError = touched && !isValidEmail(email) ? t('signup', 'invalidEmail') : undefined;
   const passwordError = touched && !isValidPassword(password) ? t('signup', 'invalidPassword') : undefined;
+  const passwordConfirmError =
+    touched && isValidPassword(password) && password !== passwordConfirm ? t('signup', 'passwordMismatch') : undefined;
   const serverEmailError =
     mutation.error instanceof ApiError && mutation.error.code === 'CONFLICT'
       ? tError(mutation.error.code, mutation.error.message)
@@ -46,7 +49,7 @@ export function SignupForm() {
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setTouched(true);
-    if (!isValidEmail(email) || !isValidPassword(password) || !name) return;
+    if (!isValidEmail(email) || !isValidPassword(password) || password !== passwordConfirm || !name) return;
     mutation.mutate();
   }
 
@@ -66,6 +69,13 @@ export function SignupForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           error={passwordError}
+        />
+        <Input
+          label={t('signup', 'passwordConfirm')}
+          type="password"
+          value={passwordConfirm}
+          onChange={(e) => setPasswordConfirm(e.target.value)}
+          error={passwordConfirmError}
         />
         <Input label={t('signup', 'name')} value={name} onChange={(e) => setName(e.target.value)} />
         <FormFieldError message={otherError} />

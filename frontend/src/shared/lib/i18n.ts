@@ -22,6 +22,8 @@ const dict = {
     loginLink: { ko: '로그인', en: 'Log in', ja: 'ログイン' },
     invalidEmail: { ko: '올바른 이메일 형식이 아닙니다.', en: 'Please enter a valid email address.', ja: '正しいメール形式ではありません。' },
     invalidPassword: { ko: '비밀번호는 8자 이상이어야 합니다.', en: 'Password must be at least 8 characters.', ja: 'パスワードは8文字以上で入力してください。' },
+    passwordConfirm: { ko: '비밀번호 확인', en: 'Confirm password', ja: 'パスワード確認' },
+    passwordMismatch: { ko: '비밀번호가 일치하지 않습니다.', en: 'Passwords do not match.', ja: 'パスワードが一致しません。' },
   },
   login: {
     title: { ko: '로그인', en: 'Log in', ja: 'ログイン' },
