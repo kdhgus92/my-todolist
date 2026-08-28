@@ -39,4 +39,6 @@ app.use('/todos', todosRoutes);
 
 app.use(errorHandler);
 
-module.exports = { app, createHealthHandler };
+module.exports = app;
+module.exports.app = app;
+module.exports.createHealthHandler = createHealthHandler;
