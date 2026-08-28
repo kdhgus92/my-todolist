@@ -90,7 +90,7 @@ test('login sets the refresh_token cookie and responds 200 with accessToken and 
   assert.deepStrictEqual(res.cookieCalls[0].options, {
     httpOnly: true,
     secure: true,
-    sameSite: 'strict',
+    sameSite: 'none',
   });
   assert.strictEqual(res.statusCode, 200);
   assert.deepStrictEqual(res.body, { accessToken: 'access-token', user });
@@ -169,7 +169,7 @@ test('logout clears the refresh_token cookie and responds 204', async () => {
   assert.deepStrictEqual(res.clearCookieCalls[0].options, {
     httpOnly: true,
     secure: true,
-    sameSite: 'strict',
+    sameSite: 'none',
   });
   assert.strictEqual(res.statusCode, 204);
   assert.strictEqual(res.sendCalled, true);

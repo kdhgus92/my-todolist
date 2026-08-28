@@ -7,6 +7,7 @@
 | 0.1 | 2026-08-26 | 최초 작성 | ohhyeun |
 | 0.2 | 2026-08-27 | FE-09 이후 범위外 추가 작업에 다크/라이트 모드, 다국어(한/영/일) 항목 추가 | ohhyeun |
 | 0.3 | 2026-08-27 | FE-09 이후 범위外 추가 작업에 회원가입 비밀번호 확인 필드 항목 추가 | ohhyeun |
+| 0.4 | 2026-08-28 | FE-09 이후 범위外 추가 작업에 Vercel 배포 대응(백엔드 서버리스 export 수정, 프론트 SPA 라우팅 폴백, refresh_token 쿠키 SameSite 수정) 항목 추가 | ohhyeun |
 
 ## 1. 문서 개요
 
@@ -340,3 +341,7 @@ PRD 8절에 이미 Day1(백엔드+DB)/Day2(프론트+통합)의 개략적 일정
 - 사용자 요청으로 다크/라이트 모드를 추가(`shared/lib/theme.ts` Zustand 스토어 + localStorage 영속화 + 시스템 선호도 감지, `index.css`의 `:root[data-theme="dark"]` 팔레트, Header 토글 버튼).
 - 사용자 요청으로 한/영/일 다국어를 추가(`shared/lib/i18n.ts` 직접 만든 딕셔너리+Zustand 스토어 + localStorage 영속화 + 브라우저 언어 감지, Header 언어 선택 드롭다운, 전 화면/컴포넌트에 `t()`/`tError()` 적용). 할일 상태값(시작전/진행중/완료/기한초과)은 API 계약값을 그대로 유지하고 표시 라벨만 번역한다.
 - 사용자 요청으로 회원가입 폼(SC-01)에 비밀번호 확인 필드를 추가(`features/signup/ui/SignupForm.tsx`). 오타로 인한 비밀번호 분실을 막기 위한 클라이언트 전용 검증(불일치 시 인라인 오류, 서버 미전송)이며, `POST /auth/signup` 요청 바디·서버 검증 로직(BR-08)에는 변경이 없다.
+- Vercel 실배포 과정에서 발견된 결함 3건을 즉시 수정했다(WBS Task 범위外, 배포 인프라 이슈):
+  1. **백엔드 서버리스 함수 export 오류**: `backend/src/app.js`가 `module.exports = { app, createHealthHandler }` 형태의 객체를 내보내 Vercel Node 런타임이 "default export must be a function or server"로 배포를 거부함. Express app을 default export로 두고 `app`/`createHealthHandler`를 프로퍼티로 붙이는 방식으로 수정(`module.exports = app; module.exports.app = app; module.exports.createHealthHandler = createHealthHandler;`). 기존 `server.js`/테스트의 구조분해 import는 그대로 동작. backend test 175/175 통과(커밋 `3389ce6`).
+  2. **SPA 새로고침 404**: 프론트 정적 배포에 라우팅 폴백 설정이 없어 `/todos` 등 딥링크에서 새로고침하면 Vercel이 404를 반환함(React Router는 index.html 로드 후에만 클라이언트에서 라우팅). `frontend/vercel.json`에 모든 경로를 `index.html`로 리라이트하는 SPA 폴백 설정 추가(커밋 `85f180e`).
+  3. **로그인 세션이 새로고침 후 풀리는 문제(프로덕션 재현)**: 원인은 `refresh_token` 쿠키의 `sameSite: 'strict'` 설정. 프론트(`*.vercel.app`)와 백엔드(`*-backend.vercel.app`)가 별도 Vercel 프로젝트/서브도메인으로 배포되는데, `vercel.app`이 Public Suffix List에 등록된 도메인이라 두 오리진이 브라우저 기준 "다른 사이트"로 취급되어 `SameSite=Strict`(Lax도 동일) 쿠키가 cross-site fetch에 실리지 않음. `backend/src/controllers/auth.controller.js`의 로그인/로그아웃 쿠키 옵션을 `sameSite: 'none'`(secure:true와 함께 사용)으로 수정하고, `backend/test/authController.test.js`·`backend/swagger.json`의 기대값/문서도 동일하게 갱신. backend test 175/175 통과.

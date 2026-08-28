@@ -317,7 +317,7 @@
             "description": "로그인 성공",
             "headers": {
               "Set-Cookie": {
-                "description": "refresh_token=<jwt>; HttpOnly; Secure; SameSite=Strict",
+                "description": "refresh_token=<jwt>; HttpOnly; Secure; SameSite=None",
                 "schema": { "type": "string" }
               }
             },

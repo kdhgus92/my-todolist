@@ -14,7 +14,7 @@ async function signup(req, res, next) {
 async function login(req, res, next) {
   try {
     const { accessToken, refreshToken, user } = await authService.login(req.body);
-    res.cookie('refresh_token', refreshToken, { httpOnly: true, secure: true, sameSite: 'strict' });
+    res.cookie('refresh_token', refreshToken, { httpOnly: true, secure: true, sameSite: 'none' });
     res.status(200).json({ accessToken, user });
   } catch (err) {
     next(err);
@@ -36,7 +36,7 @@ async function refresh(req, res, next) {
 
 async function logout(req, res, next) {
   try {
-    res.clearCookie('refresh_token', { httpOnly: true, secure: true, sameSite: 'strict' });
+    res.clearCookie('refresh_token', { httpOnly: true, secure: true, sameSite: 'none' });
     res.status(204).send();
   } catch (err) {
     next(err);
